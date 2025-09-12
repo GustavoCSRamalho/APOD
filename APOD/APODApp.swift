@@ -1,20 +1,14 @@
-//
-//  APODApp.swift
-//  APOD
-//
-//  Created by Gustavo Ramalho on 12/09/25.
-//
-
 import SwiftUI
 
 @main
-struct APODApp: App {
-    let persistenceController = PersistenceController.shared
-
+struct NasaAPODApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            let apiKey = "9224k53Nc8g0NDd5nyvZl4z3vzSX21LLH7zjMIhI"
+            let service = APODService(apiKey: apiKey)
+            let viewModel = APODViewModel(service: service)
+            
+            HomeView(viewModel: viewModel)
         }
     }
 }

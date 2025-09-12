@@ -9,9 +9,8 @@ struct APOD: Codable, Identifiable {
     let service_version: String?
     let title: String?
     let url: String?      // regular URL
-    let thumbnail_url: String? // sometimes returned for videos (if thumbs=true)
 
     enum CodingKeys: String, CodingKey {
-        case date, explanation, hdurl, media_type, service_version, title, url, thumbnail_url
+        case date, explanation, hdurl, media_type, service_version, title, url
     }
 }
