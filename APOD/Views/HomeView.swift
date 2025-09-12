@@ -12,10 +12,11 @@ struct HomeView: View {
             content
                 .navigationTitle("NASA APOD")
                 .toolbar {
-                    ToolbarItem(placement: .automatic) {
+                    ToolbarItem(placement: .navigationBarTrailing) {
                         NavigationLink("List") {
-                            // APODListView(...) -> implementar
-                            Text("List placeholder")
+                            let service = APODService(apiKey: Bundle.main.infoDictionary?["API_KEY"] as? String ?? String())
+                            let listVM = APODListViewModel(service: service)
+                            APODListView(viewModel: listVM)
                         }
                     }
                 }
