@@ -14,3 +14,15 @@ struct APOD: Codable, Identifiable {
         case date, explanation, hdurl, media_type, service_version, title, url
     }
 }
+
+extension APOD {
+    init(from favorite: FavoriteAPOD) {
+        self.date = favorite.date ?? ""
+        self.title = favorite.title
+        self.explanation = favorite.explanation
+        self.url = favorite.url
+        self.hdurl = favorite.hdurl
+        self.service_version = favorite.service_version
+        self.media_type = favorite.media_type ?? ""
+    }
+}

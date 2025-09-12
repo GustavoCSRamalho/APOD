@@ -32,7 +32,6 @@ final class APODListViewModel: ObservableObject {
             let start = formatter.string(from: startDate)
             let end = formatter.string(from: today)
             let apods = try await service.fetchRange(startDate: start, endDate: end)
-            // Ordena do mais recente para o mais antigo
             let sorted = apods.sorted { $0.date > $1.date }
             state = .loaded(sorted)
         } catch {

@@ -2,30 +2,51 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject private var vm: APODViewModel
-
+    @StateObject private var favoritesVM = FavoritesViewModel()
+    
+    @State private var showingList = false
+    @State private var showingFavorites = false
+    
     init(viewModel: APODViewModel) {
         _vm = StateObject(wrappedValue: viewModel)
     }
-
+    
     var body: some View {
         NavigationView {
             content
                 .navigationTitle("NASA APOD")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        NavigationLink("List") {
-                            let service = APODService(apiKey: Bundle.main.infoDictionary?["API_KEY"] as? String ?? "9224k53Nc8g0NDd5nyvZl4z3vzSX21LLH7zjMIhI")
-                            let listVM = APODListViewModel(service: service)
-                            APODListView(viewModel: listVM)
+                        Menu {
+                            Button("List") { showingList = true }
+                            Button("Favorites") { showingFavorites = true }
+                        } label: {
+                            Image(systemName: "ellipsis.circle")
                         }
                     }
                 }
-        }
-        .task {
-            await vm.loadToday()
+                .task {
+                    await vm.loadToday()
+                    favoritesVM.fetchFavorites()
+                }
+                .sheet(isPresented: $showingList) {
+                    let apiKey = "9224k53Nc8g0NDd5nyvZl4z3vzSX21LLH7zjMIhI"
+                    let service = APODService(apiKey: Bundle.main.infoDictionary?["API_KEY"] as? String ?? apiKey)
+                    let listVM = APODListViewModel(service: service)
+                    NavigationView {
+                        APODListView(viewModel: listVM)
+                            .environmentObject(favoritesVM)
+                    }
+                }
+                .sheet(isPresented: $showingFavorites) {
+                    NavigationView {
+                        FavoritesView()
+                            .environmentObject(favoritesVM)
+                    }
+                }
         }
     }
-
+    
     @ViewBuilder
     private var content: some View {
         switch vm.state {
@@ -39,31 +60,55 @@ struct HomeView: View {
                     Text(apod.title ?? "No title")
                         .font(.title)
                         .bold()
-                        .multilineTextAlignment(.leading)
-                    if let urlString = apod.url, let url = URL(string: urlString), apod.media_type == "image" {
-                        AsyncImage(url: url) { phase in
-                            switch phase {
-                            case .empty:
-                                ProgressView()
-                                    .frame(maxWidth: .infinity, minHeight: 200)
-                            case .success(let image):
-                                image
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(maxWidth: .infinity)
-                                    .cornerRadius(12)
-                            case .failure:
-                                Color.gray
-                                    .frame(height: 200)
-                            @unknown default:
-                                EmptyView()
+                    
+                    if let urlString = apod.url, let url = URL(string: urlString) {
+                        if apod.media_type == "image" {
+                            AsyncImage(url: url) { phase in
+                                switch phase {
+                                case .empty:
+                                    ProgressView()
+                                        .frame(maxWidth: .infinity, minHeight: 200)
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .scaledToFit()
+                                        .cornerRadius(12)
+                                case .failure:
+                                    Color.gray.frame(height: 200)
+                                @unknown default:
+                                    EmptyView()
+                                }
                             }
+                        } else if apod.media_type == "video" {
+                            Link("Open Video", destination: url)
+                                .foregroundColor(.blue)
+                                .padding()
                         }
                     } else {
-                        Text("Media not available or is a video.")
+                        Text("Media not available")
+                            .foregroundColor(.secondary)
                     }
+                    
                     Text(apod.explanation ?? "")
                         .font(.body)
+                    
+                    Button {
+                        if favoritesVM.isFavorited(apod: apod) {
+                            if let fav = favoritesVM.favorites.first(where: { $0.date == apod.date }) {
+                                favoritesVM.removeFavorite(fav)
+                            }
+                        } else {
+                            favoritesVM.addFavorite(apod: apod)
+                        }
+                    } label: {
+                        Text(favoritesVM.isFavorited(apod: apod) ? "Unfavorite" : "Favorite")
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(favoritesVM.isFavorited(apod: apod) ? Color.red : Color.blue)
+                            .cornerRadius(8)
+                    }
+                    .padding(.top)
                 }
                 .padding()
             }

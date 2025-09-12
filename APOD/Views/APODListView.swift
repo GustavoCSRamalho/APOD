@@ -1,84 +1,37 @@
 import SwiftUI
 
 struct APODListView: View {
-    @StateObject private var vm: APODListViewModel
-
-    init(viewModel: APODListViewModel) {
-        _vm = StateObject(wrappedValue: viewModel)
-    }
-
+    @StateObject var viewModel: APODListViewModel
+    @EnvironmentObject var favoritesVM: FavoritesViewModel
+    
     var body: some View {
-        NavigationView {
-            content
-                .navigationTitle("Last APODs")
-        }
-        .task {
-            await vm.loadLastDays()
-        }
-    }
-
-    @ViewBuilder
-    private var content: some View {
-        switch vm.state {
-        case .idle:
-            ProgressView("Ready")
-        case .loading:
-            ProgressView("Loading...")
-        case .loaded(let apods):
-            List(apods) { apod in
-                NavigationLink(destination: APODDetailView(apod: apod)) {
-                    HStack {
-                        if let urlString = apod.url, let url = URL(string: urlString), apod.media_type == "image" {
-                            AsyncImage(url: url) { phase in
-                                switch phase {
-                                case .empty:
-                                    ProgressView()
-                                        .frame(width: 80, height: 80)
-                                case .success(let image):
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 80, height: 80)
-                                        .clipped()
-                                        .cornerRadius(8)
-                                case .failure:
-                                    Color.gray
-                                        .frame(width: 80, height: 80)
-                                @unknown default:
-                                    EmptyView()
-                                }
-                            }
-                        } else {
-                            Color.gray
-                                .frame(width: 80, height: 80)
-                        }
-                        VStack(alignment: .leading) {
-                            Text(apod.title ?? "No title")
-                                .font(.headline)
-                                .lineLimit(2)
-                            Text(apod.date)
-                                .font(.subheadline)
-                                .foregroundColor(.secondary)
-                        }
+        List {
+            switch viewModel.state {
+            case .idle, .loading:
+                ProgressView("Loading...")
+            case .loaded(let apods):
+                ForEach(apods, id: \.date) { apod in
+                    NavigationLink(destination: APODDetailView(apod: apod)
+                                    .environmentObject(favoritesVM)) {
+                        APODRowView(apod: apod)
                     }
-                    .padding(.vertical, 4)
                 }
+            case .failed(let error):
+                Text("Error: \(error)")
             }
-        case .failed(let msg):
-            VStack {
-                Text("Error: \(msg)")
-                Button("Try Again") {
-                    Task { await vm.loadLastDays() }
-                }
-            }
+        }
+        .navigationTitle("APOD List")
+        .navigationBarTitleDisplayMode(.inline)
+        .task {
+            await viewModel.loadLastDays()
         }
     }
 }
 
 struct APODListView_Previews: PreviewProvider {
     static var previews: some View {
-        let mockService = MockAPODService()
-        let vm = APODListViewModel(service: mockService, lastDays: 5)
+        let vm = APODListViewModel(service: MockAPODService())
         APODListView(viewModel: vm)
+            .environmentObject(FavoritesViewModel())
     }
 }
