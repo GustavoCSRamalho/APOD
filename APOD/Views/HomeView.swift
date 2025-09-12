@@ -14,7 +14,7 @@ struct HomeView: View {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         NavigationLink("List") {
-                            let service = APODService(apiKey: Bundle.main.infoDictionary?["API_KEY"] as? String ?? String())
+                            let service = APODService(apiKey: Bundle.main.infoDictionary?["API_KEY"] as? String ?? "9224k53Nc8g0NDd5nyvZl4z3vzSX21LLH7zjMIhI")
                             let listVM = APODListViewModel(service: service)
                             APODListView(viewModel: listVM)
                         }
