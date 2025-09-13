@@ -1,8 +1,9 @@
 import CoreData
+import os.log
 
 final class CoreDataStack {
     static let shared = CoreDataStack()
-    
+    private let logger = Logger(subsystem: "com.gustavoramalho.APOD", category: "CoreData")
     let container: NSPersistentContainer
     
     private init() {
@@ -16,13 +17,13 @@ final class CoreDataStack {
     
     var context: NSManagedObjectContext { container.viewContext }
     
-    func saveContext() {
-        let context = container.viewContext
-        if context.hasChanges {
+    func saveContext(context: NSManagedObjectContext? = nil) {
+        let ctx = context ?? self.context
+        if ctx.hasChanges {
             do {
-                try context.save()
+                try ctx.save()
             } catch {
-                print("Core Data save failed: \(error)")
+                logger.error("Error saving context: \(error)")
             }
         }
     }

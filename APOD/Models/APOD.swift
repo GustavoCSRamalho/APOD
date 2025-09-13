@@ -1,4 +1,5 @@
 import Foundation
+import CoreData
 
 struct APOD: Codable, Identifiable {
     public var id: String { date }
@@ -16,13 +17,13 @@ struct APOD: Codable, Identifiable {
 }
 
 extension APOD {
-    init(from favorite: FavoriteAPOD) {
+    init(favorite: FavoriteAPOD) {
         self.date = favorite.date ?? ""
         self.title = favorite.title
         self.explanation = favorite.explanation
         self.url = favorite.url
         self.hdurl = favorite.hdurl
         self.service_version = favorite.service_version
-        self.media_type = favorite.media_type ?? ""
+        self.media_type = favorite.media_type ?? "image"
     }
 }

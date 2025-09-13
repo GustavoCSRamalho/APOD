@@ -1,20 +1,20 @@
 import SwiftUI
 
 struct FavoritesView: View {
-    @EnvironmentObject var favVM: FavoritesViewModel
+    @EnvironmentObject var favoritesVM: FavoritesViewModel
     
     var body: some View {
         List {
-            if favVM.favorites.isEmpty {
+            if favoritesVM.favorites.isEmpty {
                 Text("No favorites yet")
                     .foregroundColor(.secondary)
             } else {
-                ForEach(favVM.favorites, id: \.date) { favAPOD in
+                ForEach(favoritesVM.favorites, id: \.date) { favAPOD in
                     NavigationLink(
-                        destination: APODDetailView(apod: APOD(from: favAPOD))
-                            .environmentObject(favVM)
+                        destination: APODDetailView(apod: favAPOD)
+                            .environmentObject(favoritesVM)
                     ) {
-                        APODRowView(apod: APOD(from: favAPOD))
+                        APODRowView(apod: favAPOD)
                     }
                 }
                 .onDelete(perform: delete)
@@ -29,8 +29,8 @@ struct FavoritesView: View {
     
     private func delete(at offsets: IndexSet) {
         for index in offsets {
-            let apod = favVM.favorites[index]
-            favVM.removeFavorite(apod)
+            let apod = favoritesVM.favorites[index]
+            favoritesVM.removeFavorite(apod)
         }
     }
 }
@@ -38,6 +38,6 @@ struct FavoritesView: View {
 struct FavoritesView_Previews: PreviewProvider {
     static var previews: some View {
         FavoritesView()
-            .environmentObject(FavoritesViewModel())
+            .environmentObject(FavoritesViewModel(repository: MockFavoritesRepository()))
     }
 }

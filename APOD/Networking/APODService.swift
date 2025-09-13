@@ -9,7 +9,7 @@ protocol APODServiceProtocol {
 final class APODService: APODServiceProtocol {
     private let client: APIClient
     private let apiKey: String
-    private let baseURL = URL(string: "http://localhost:3000/planetary/apod")!
+    private let baseURL = URL(string: "https://api.nasa.gov/planetary/apod")!
 
     init(client: APIClient = APIClient(), apiKey: String) {
         self.client = client

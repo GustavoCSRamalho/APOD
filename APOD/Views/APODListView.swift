@@ -20,7 +20,7 @@ struct APODListView: View {
                 Text("Error: \(error)")
             }
         }
-        .navigationTitle("APOD List")
+        .navigationTitle("List")
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await viewModel.loadLastDays()
@@ -30,8 +30,13 @@ struct APODListView: View {
 
 struct APODListView_Previews: PreviewProvider {
     static var previews: some View {
-        let vm = APODListViewModel(service: MockAPODService())
-        APODListView(viewModel: vm)
-            .environmentObject(FavoritesViewModel())
+        let mockService = MockAPODService()
+        let listVM = APODListViewModel(service: mockService)
+        let favoritesVM = FavoritesViewModel(repository: MockFavoritesRepository())
+        
+        return NavigationView {
+            APODListView(viewModel: listVM)
+                .environmentObject(favoritesVM)
+        }
     }
 }

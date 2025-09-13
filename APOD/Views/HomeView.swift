@@ -2,8 +2,8 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject private var vm: APODViewModel
-    @StateObject private var favoritesVM = FavoritesViewModel()
-    
+    @EnvironmentObject var favoritesVM: FavoritesViewModel
+
     @State private var showingList = false
     @State private var showingFavorites = false
     
@@ -23,6 +23,7 @@ struct HomeView: View {
                         } label: {
                             Image(systemName: "ellipsis.circle")
                         }
+                        .accessibilityIdentifier("optionsMenu")
                     }
                 }
                 .task {
@@ -30,9 +31,7 @@ struct HomeView: View {
                     favoritesVM.fetchFavorites()
                 }
                 .sheet(isPresented: $showingList) {
-                    let apiKey = "9224k53Nc8g0NDd5nyvZl4z3vzSX21LLH7zjMIhI"
-                    let service = APODService(apiKey: Bundle.main.infoDictionary?["API_KEY"] as? String ?? apiKey)
-                    let listVM = APODListViewModel(service: service)
+                    let listVM = AppDIContainer().makeListViewModel()
                     NavigationView {
                         APODListView(viewModel: listVM)
                             .environmentObject(favoritesVM)
@@ -40,7 +39,7 @@ struct HomeView: View {
                 }
                 .sheet(isPresented: $showingFavorites) {
                     NavigationView {
-                        FavoritesView()
+                        AppDIContainer().makeFavoritesView()
                             .environmentObject(favoritesVM)
                     }
                 }
@@ -108,6 +107,7 @@ struct HomeView: View {
                             .background(favoritesVM.isFavorited(apod: apod) ? Color.red : Color.blue)
                             .cornerRadius(8)
                     }
+                    .accessibilityIdentifier("favoriteButton")
                     .padding(.top)
                 }
                 .padding()
@@ -127,7 +127,7 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        let vm = APODViewModel(service: MockAPODService())
-        HomeView(viewModel: vm)
+        let diContainer = AppDIContainer()
+        diContainer.makeHomeView()
     }
 }
