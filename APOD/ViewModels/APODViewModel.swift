@@ -19,21 +19,25 @@ final class APODViewModel: ObservableObject {
 
     func loadToday() async {
         state = .loading
-        do {
-            let apod = try await service.fetchAPOD(for: nil)
+        let result = await service.fetchAPOD(for: nil)
+        
+        switch result {
+        case .success(let apod):
             state = .loaded(apod)
-        } catch {
-            state = .failed(error.localizedDescription)
+        case .failure(let error):
+            state = .failed(error.userMessage)
         }
     }
 
     func load(date: String) async {
         state = .loading
-        do {
-            let apod = try await service.fetchAPOD(for: date)
+        let result = await service.fetchAPOD(for: date)
+        
+        switch result {
+        case .success(let apod):
             state = .loaded(apod)
-        } catch {
-            state = .failed(error.localizedDescription)
+        case .failure(let error):
+            state = .failed(error.userMessage)
         }
     }
 }
