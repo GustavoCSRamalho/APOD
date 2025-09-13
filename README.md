@@ -81,7 +81,7 @@ graph TD
 
 * Título, explicação e data.
 * Botão para favoritar/desfavoritar.
-* Compatível com imagens e vídeos.
+* Compatível com imagens.
 
 **Favoritos**
 
