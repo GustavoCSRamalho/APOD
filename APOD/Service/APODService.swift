@@ -17,25 +17,25 @@ final class APODService: APODServiceProtocol {
     }
 
     func fetchAPOD(for date: String? = nil) async throws -> APOD {
-        var query: [URLQueryItem] = [URLQueryItem(name: "api_key", value: apiKey)]
-        if let d = date { query.append(URLQueryItem(name: "date", value: d)) }
-        return try await client.get(url: baseURL, queryItems: query)
+        var params: [String: Any] = ["api_key": apiKey]
+        if let d = date { params["date"] = d }
+        return try await client.get(url: baseURL, parameters: params)
     }
 
     func fetchRange(startDate: String, endDate: String) async throws -> [APOD] {
-        let query: [URLQueryItem] = [
-            URLQueryItem(name: "api_key", value: apiKey),
-            URLQueryItem(name: "start_date", value: startDate),
-            URLQueryItem(name: "end_date", value: endDate)
+        let params: [String: Any] = [
+            "api_key": apiKey,
+            "start_date": startDate,
+            "end_date": endDate
         ]
-        return try await client.get(url: baseURL, queryItems: query)
+        return try await client.get(url: baseURL, parameters: params)
     }
 
     func fetchRandom(count: Int) async throws -> [APOD] {
-        let query: [URLQueryItem] = [
-            URLQueryItem(name: "api_key", value: apiKey),
-            URLQueryItem(name: "count", value: "\(count)")
+        let params: [String: Any] = [
+            "api_key": apiKey,
+            "count": count
         ]
-        return try await client.get(url: baseURL, queryItems: query)
+        return try await client.get(url: baseURL, parameters: params)
     }
 }
