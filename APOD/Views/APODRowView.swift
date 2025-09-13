@@ -1,4 +1,5 @@
 import SwiftUI
+import Kingfisher
 
 struct APODRowView: View {
     let apod: APOD
@@ -8,23 +9,15 @@ struct APODRowView: View {
             if let urlString = apod.url,
                let url = URL(string: urlString),
                apod.media_type == "image" {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .empty:
+                KFImage(url)
+                    .placeholder {
                         ProgressView()
                             .frame(width: 60, height: 60)
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 60, height: 60)
-                            .cornerRadius(8)
-                    case .failure:
-                        Color.gray.frame(width: 60, height: 60)
-                    @unknown default:
-                        EmptyView()
                     }
-                }
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 60, height: 60)
+                    .cornerRadius(8)
             } else {
                 Image(systemName: "photo")
                     .resizable()

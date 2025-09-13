@@ -1,4 +1,5 @@
 import SwiftUI
+import Kingfisher
 
 struct APODDetailView: View {
     let apod: APOD
@@ -14,27 +15,16 @@ struct APODDetailView: View {
                 
                 if let urlString = apod.url, let url = URL(string: urlString) {
                     if apod.media_type == "image" {
-                        AsyncImage(url: url) { phase in
-                            switch phase {
-                            case .empty:
+                        // Substituindo AsyncImage por KFImage
+                        KFImage(url)
+                            .placeholder {
                                 ProgressView()
                                     .frame(maxWidth: .infinity, minHeight: 200)
-                            case .success(let image):
-                                image
-                                    .resizable()
-                                    .scaledToFit()
-                                    .cornerRadius(12)
-                                    .accessibilityIdentifier("detailPhoto")
-                            case .failure:
-                                Color.gray.frame(height: 200)
-                            @unknown default:
-                                EmptyView()
                             }
-                        }
-                    } else if apod.media_type == "video" {
-                        Link("Open Video", destination: url)
-                            .foregroundColor(.blue)
-                            .padding()
+                            .resizable()
+                            .scaledToFit()
+                            .cornerRadius(12)
+                            .accessibilityIdentifier("detailPhoto")
                     }
                 } else {
                     Text(AppStrings.Detail.mediaNotAvailable)

@@ -24,7 +24,7 @@ final class APODListViewUITests: XCTestCase {
         XCTAssertTrue(listButton.waitForExistence(timeout: 3), "Botão 'List' não apareceu no menu")
         listButton.tap()
 
-        let listTitle = app.navigationBars["APOD List"]
+        let listTitle = app.navigationBars["List"]
         XCTAssertTrue(listTitle.waitForExistence(timeout: 3), "Tela de List não foi aberta")
         
         let progress = app.staticTexts["Loading..."]
