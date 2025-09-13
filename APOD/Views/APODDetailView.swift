@@ -7,7 +7,7 @@ struct APODDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) {
-                Text(apod.title ?? "No title")
+                Text(apod.title ?? AppStrings.Row.noTitle)
                     .font(.title)
                     .bold()
                     .accessibilityIdentifier("detailTitle")
@@ -31,9 +31,13 @@ struct APODDetailView: View {
                                 EmptyView()
                             }
                         }
+                    } else if apod.media_type == "video" {
+                        Link("Open Video", destination: url)
+                            .foregroundColor(.blue)
+                            .padding()
                     }
                 } else {
-                    Text("Media not available")
+                    Text(AppStrings.Detail.mediaNotAvailable)
                         .foregroundColor(.secondary)
                 }
                 
@@ -41,7 +45,7 @@ struct APODDetailView: View {
                     .font(.body)
                     .accessibilityIdentifier("detailExplanation")
                 
-                Text("Date: \(apod.date)")
+                Text("\(AppStrings.Detail.datePrefix)\(apod.date)")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .accessibilityIdentifier("detailDate")
@@ -55,7 +59,7 @@ struct APODDetailView: View {
                         favoritesVM.addFavorite(apod: apod)
                     }
                 }) {
-                    Text(favoritesVM.isFavorited(apod: apod) ? "Unfavorite" : "Favorite")
+                    Text(favoritesVM.isFavorited(apod: apod) ? AppStrings.Detail.unfavorite : AppStrings.Detail.favorite)
                         .foregroundColor(.white)
                         .padding()
                         .frame(maxWidth: .infinity)
@@ -67,7 +71,7 @@ struct APODDetailView: View {
             }
             .padding()
         }
-        .navigationTitle("Details")
+        .navigationTitle(AppStrings.Detail.title)
         .navigationBarTitleDisplayMode(.inline)
         .task {
             favoritesVM.fetchFavorites()
@@ -79,7 +83,7 @@ struct APODDetailView_Previews: PreviewProvider {
     static var previews: some View {
         let mockAPOD = APOD(
             date: "2025-09-03",
-            explanation: "How soon do jets form when a supernova gives birth to a neutron star?  The Africa Nebula provides clues. ...",
+            explanation: "How soon do jets form when a supernova gives birth to a neutron star? The Africa Nebula provides clues...",
             hdurl: "https://apod.nasa.gov/apod/image/2508/CirX1_English_960.jpg",
             media_type: "image",
             service_version: "v1",
