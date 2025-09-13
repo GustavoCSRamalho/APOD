@@ -33,7 +33,7 @@ final class APODViewModelTests: XCTestCase {
         await viewModel.loadToday()
         switch viewModel.state {
         case .failed(let error):
-            XCTAssertEqual(error, "Mock failure")
+            XCTAssertEqual(error, APIError.network(APIError.apiError(statusCode: 400)).userMessage)
         default:
             XCTFail("Expected failed state")
         }
@@ -55,7 +55,7 @@ final class APODViewModelTests: XCTestCase {
         await viewModel.load(date: "2025-09-11")
         switch viewModel.state {
         case .failed(let error):
-            XCTAssertEqual(error, "Mock failure")
+            XCTAssertEqual(error, APIError.network(APIError.apiError(statusCode: 400)).userMessage)
         default:
             XCTFail("Expected failed state")
         }

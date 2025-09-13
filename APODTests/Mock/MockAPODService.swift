@@ -19,22 +19,29 @@ final class MockAPODService: APODServiceProtocol {
         APOD(date: "2025-09-11", explanation: "Test 2", hdurl: nil, media_type: "image", service_version: "v1", title: "Title 2", url: "https://example.com/2.jpg")
     ]
     
-    func fetchRange(startDate: String, endDate: String) async throws -> [APOD] {
-        if shouldFail { throw MockError.testFailure }
-        return mockAPODs
-    }
-    
-    func fetchAPOD(for date: String?) async throws -> APOD {
-        if shouldFail { throw MockError.testFailure }
+    func fetchAPOD(for date: String?) async -> Result<APOD, APIError> {
+        if shouldFail {
+            return .failure(.network(MockError.testFailure))
+        }
         if let date = date, let apod = mockAPODs.first(where: { $0.date == date }) {
-            return apod
+            return .success(apod)
         } else {
-            return mockAPODs.first!
+            return .success(mockAPODs.first!)
         }
     }
     
-    func fetchRandom(count: Int) async throws -> [APOD] {
-        if shouldFail { throw MockError.testFailure }
-        return Array(mockAPODs.prefix(count))
+    func fetchRange(startDate: String, endDate: String) async -> Result<[APOD], APIError> {
+        if shouldFail {
+            return .failure(.network(MockError.testFailure))
+        }
+        let filtered = mockAPODs.filter { $0.date >= startDate && $0.date <= endDate }
+        return .success(filtered)
+    }
+    
+    func fetchRandom(count: Int) async -> Result<[APOD], APIError> {
+        if shouldFail {
+            return .failure(.network(MockError.testFailure))
+        }
+        return .success(Array(mockAPODs.prefix(count)))
     }
 }
