@@ -3,6 +3,8 @@
 Aplicativo iOS que consome a API **NASA Astronomy Picture of the Day (APOD)**, permitindo visualizar imagens e vídeos diários do espaço, favoritar conteúdos e navegar por listas históricas.
 
 ---
+[![Watch demo](https://img.youtube.com/vi/s5DBwQAJ-S4/maxresdefault.jpg)](https://www.youtube.com/shorts/s5DBwQAJ-S4)
+---
 
 ## 🏗 Arquitetura e Estrutura do Projeto
 
