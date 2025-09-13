@@ -119,6 +119,7 @@ graph TD
 * Swift 5+ / SwiftUI
 * Combine / Async-Await
 * Alamofire para requisições HTTP
+* Kingfisher para cachear as imagens.
 * Core Data para persistência local
 * Dependency Injection com `AppDIContainer`
 * Unit & UI Tests com XCTest
@@ -157,6 +158,7 @@ graph TD
 * iOS 16+
 * Alamofire (via Swift Package Manager)
 * SwiftLint (via Swift Package Manager)
+* KingFisher (via Swift Package Manager)
 
 **Configurar API Key**
 Adicionar chave no `Config.xcconfig`:
