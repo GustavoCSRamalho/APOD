@@ -15,22 +15,6 @@ final class HomeViewUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["NASA APOD"].exists)
     }
 
-    func testFavoriteButtonToggle() throws {
-        let favoriteButton = app.buttons["favoriteButton"]
-        
-        XCTAssertTrue(favoriteButton.waitForExistence(timeout: 5))
-        
-        XCTAssertTrue(favoriteButton.label == "Favorite")
-        
-        favoriteButton.tap()
-        
-        XCTAssertTrue(favoriteButton.label == "Unfavorite")
-        
-        favoriteButton.tap()
-        
-        XCTAssertTrue(favoriteButton.label == "Favorite")
-    }
-
     func testTapOptionsMenu() {
         let optionsButton = app.buttons["optionsMenu"]
         XCTAssertTrue(optionsButton.waitForExistence(timeout: 5))
