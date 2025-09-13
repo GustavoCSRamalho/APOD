@@ -13,7 +13,7 @@ APOD/
 ├── App/                     # Entry point do app (APODApp.swift)
 ├── Repositories/            # Core Data Repositories e Protocolos
 │   ├── FavoritesRepository.swift
-│   └── FavoritesRepositoryProtocol.swift
+│   └── FavoritesRepositoryProtocol.swiftFavoritesView
 ├── Service/                 # Serviços de rede
 │   ├── APIClient.swift
 │   └── APODService.swift
@@ -103,7 +103,7 @@ graph TD
 
 ## 🛠 Funcionalidades
 
-* Visualizar a imagem ou vídeo do dia.
+* Visualizar a imagem do dia.
 * Favoritar e remover favoritos com persistência via Core Data.
 * Listar APODs dos últimos dias.
 * Navegação entre Home, Lista e Favoritos.
