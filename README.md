@@ -55,6 +55,8 @@ graph TD
     APODListViewModel --> APODListView
     FavoritesViewModel --> FavoritesView
     HomeView --> APODDetailView
+    HomeView --> APODListView
+    HomeView --> FavoritesView
     APODListView --> APODDetailView
     FavoritesView --> APODDetailView
 ```
