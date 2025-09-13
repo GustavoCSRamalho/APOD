@@ -6,7 +6,7 @@ Aplicativo iOS que consome a API NASA Astronomy Picture of the Day (APOD), permi
 
 🏗 Arquitetura e Estrutura do Projeto
 
-O app segue arquitetura limpa e modular, com MVVM, Dependency Injection e separação clara de responsabilidades.
+O app segue arquitetura limpa e modular, utilizando MVVM, Dependency Injection e separação clara de responsabilidades.
 
 APOD/
 ├── App/                     # Entry point do app (APODApp.swift)
