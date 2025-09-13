@@ -6,7 +6,7 @@ struct FavoritesView: View {
     var body: some View {
         List {
             if favoritesVM.favorites.isEmpty {
-                Text("No favorites yet")
+                Text(AppStrings.Favorites.emptyMessage)
                     .foregroundColor(.secondary)
             } else {
                 ForEach(favoritesVM.favorites, id: \.date) { favAPOD in
@@ -20,7 +20,7 @@ struct FavoritesView: View {
                 .onDelete(perform: delete)
             }
         }
-        .navigationTitle("Favorites")
+        .navigationTitle(AppStrings.Favorites.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             EditButton()
