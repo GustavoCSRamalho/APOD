@@ -127,6 +127,8 @@ graph TD
 
 ## 🧪 Testes
 
+# Desative a execucao de testes em paralelismo para evitar que o teste de UI quebre.
+
 **Unit Tests**
 
 * `APODViewModelTests.swift` → Testa lógica de carregamento e estados de tela.
