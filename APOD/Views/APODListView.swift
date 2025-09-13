@@ -8,7 +8,7 @@ struct APODListView: View {
         List {
             switch viewModel.state {
             case .idle, .loading:
-                ProgressView("Loading...")
+                ProgressView(AppStrings.List.progressLoading)
             case .loaded(let apods):
                 ForEach(apods, id: \.date) { apod in
                     NavigationLink(destination: APODDetailView(apod: apod)
@@ -17,10 +17,10 @@ struct APODListView: View {
                     }
                 }
             case .failed(let error):
-                Text("Error: \(error)")
+                Text("\(AppStrings.List.errorPrefix)\(error)")
             }
         }
-        .navigationTitle("List")
+        .navigationTitle(AppStrings.List.title)
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await viewModel.loadLastDays()

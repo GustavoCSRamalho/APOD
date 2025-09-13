@@ -35,7 +35,7 @@ struct APODRowView: View {
             }
             
             VStack(alignment: .leading) {
-                Text(apod.title ?? "No title")
+                Text(apod.title ?? AppStrings.Row.noTitle)
                     .accessibilityIdentifier("rowTitle")
                     .font(.headline)
                 Text(apod.date)

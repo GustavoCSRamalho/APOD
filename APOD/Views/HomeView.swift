@@ -14,12 +14,12 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             content
-                .navigationTitle("NASA APOD")
+                .navigationTitle(AppStrings.Home.title)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Menu {
-                            Button("List") { showingList = true }
-                            Button("Favorites") { showingFavorites = true }
+                            Button(AppStrings.Home.menuList) { showingList = true }
+                            Button(AppStrings.Home.menuFavorites) { showingFavorites = true }
                         } label: {
                             Image(systemName: "ellipsis.circle")
                         }
@@ -50,13 +50,13 @@ struct HomeView: View {
     private var content: some View {
         switch vm.state {
         case .idle:
-            ProgressView("Ready")
+            ProgressView(AppStrings.Home.progressIdle)
         case .loading:
-            ProgressView("Carregando...")
+            ProgressView(AppStrings.Home.progressLoading)
         case .loaded(let apod):
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    Text(apod.title ?? "No title")
+                    Text(apod.title ?? AppStrings.Row.noTitle)
                         .font(.title)
                         .bold()
                     
@@ -84,7 +84,7 @@ struct HomeView: View {
                                 .padding()
                         }
                     } else {
-                        Text("Media not available")
+                        Text(AppStrings.Home.mediaNotAvailable)
                             .foregroundColor(.secondary)
                     }
                     
@@ -100,7 +100,7 @@ struct HomeView: View {
                             favoritesVM.addFavorite(apod: apod)
                         }
                     } label: {
-                        Text(favoritesVM.isFavorited(apod: apod) ? "Unfavorite" : "Favorite")
+                        Text(favoritesVM.isFavorited(apod: apod) ? AppStrings.Home.unfavorite : AppStrings.Home.favorite)
                             .foregroundColor(.white)
                             .padding()
                             .frame(maxWidth: .infinity)
@@ -114,8 +114,8 @@ struct HomeView: View {
             }
         case .failed(let msg):
             VStack {
-                Text("Erro: \(msg)")
-                Button("Tentar novamente") {
+                Text("\(AppStrings.Home.errorPrefix)\(msg)")
+                Button(AppStrings.Home.retry) {
                     Task {
                         await vm.loadToday()
                     }
