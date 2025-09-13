@@ -21,21 +21,24 @@ final class APODListViewModel: ObservableObject {
 
     func loadLastDays() async {
         state = .loading
-        do {
-            let today = Date()
-            guard let startDate = Calendar.current.date(byAdding: .day, value: -lastDays + 1, to: today) else {
-                state = .failed("Could not calculate start date")
-                return
-            }
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd"
-            let start = formatter.string(from: startDate)
-            let end = formatter.string(from: today)
-            let apods = try await service.fetchRange(startDate: start, endDate: end)
+        let today = Date()
+        guard let startDate = Calendar.current.date(byAdding: .day, value: -lastDays + 1, to: today) else {
+            state = .failed("Could not calculate start date")
+            return
+        }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let start = formatter.string(from: startDate)
+        let end = formatter.string(from: today)
+        
+        let result = await service.fetchRange(startDate: start, endDate: end)
+        
+        switch result {
+        case .success(let apods):
             let sorted = apods.sorted { $0.date > $1.date }
             state = .loaded(sorted)
-        } catch {
-            state = .failed(error.localizedDescription)
+        case .failure(let error):
+            state = .failed(error.userMessage) // ou use sua mensagem amigável
         }
     }
 }

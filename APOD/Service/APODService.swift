@@ -1,9 +1,9 @@
 import Foundation
 
 protocol APODServiceProtocol {
-    func fetchAPOD(for date: String?) async throws -> APOD
-    func fetchRange(startDate: String, endDate: String) async throws -> [APOD]
-    func fetchRandom(count: Int) async throws -> [APOD]
+    func fetchAPOD(for date: String?) async -> Result<APOD, APIError>
+    func fetchRange(startDate: String, endDate: String) async -> Result<[APOD], APIError>
+    func fetchRandom(count: Int) async -> Result<[APOD], APIError>
 }
 
 final class APODService: APODServiceProtocol {
@@ -16,26 +16,50 @@ final class APODService: APODServiceProtocol {
         self.apiKey = apiKey
     }
 
-    func fetchAPOD(for date: String? = nil) async throws -> APOD {
+    func fetchAPOD(for date: String? = nil) async -> Result<APOD, APIError> {
         var params: [String: Any] = ["api_key": apiKey]
         if let d = date { params["date"] = d }
-        return try await client.get(url: baseURL, parameters: params)
+        
+        do {
+            let apod: APOD = try await client.get(url: baseURL, parameters: params)
+            return .success(apod)
+        } catch let error as APIError {
+            return .failure(error)
+        } catch {
+            return .failure(.network(error))
+        }
     }
 
-    func fetchRange(startDate: String, endDate: String) async throws -> [APOD] {
+    func fetchRange(startDate: String, endDate: String) async -> Result<[APOD], APIError> {
         let params: [String: Any] = [
             "api_key": apiKey,
             "start_date": startDate,
             "end_date": endDate
         ]
-        return try await client.get(url: baseURL, parameters: params)
+        
+        do {
+            let apods: [APOD] = try await client.get(url: baseURL, parameters: params)
+            return .success(apods)
+        } catch let error as APIError {
+            return .failure(error)
+        } catch {
+            return .failure(.network(error))
+        }
     }
 
-    func fetchRandom(count: Int) async throws -> [APOD] {
+    func fetchRandom(count: Int) async -> Result<[APOD], APIError> {
         let params: [String: Any] = [
             "api_key": apiKey,
             "count": count
         ]
-        return try await client.get(url: baseURL, parameters: params)
+        
+        do {
+            let apods: [APOD] = try await client.get(url: baseURL, parameters: params)
+            return .success(apods)
+        } catch let error as APIError {
+            return .failure(error)
+        } catch {
+            return .failure(.network(error))
+        }
     }
 }

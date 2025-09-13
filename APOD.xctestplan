@@ -1,0 +1,37 @@
+{
+  "configurations" : [
+    {
+      "id" : "8D6C94C1-9301-40A5-B97C-2558E30B6C63",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:APOD.xcodeproj",
+      "identifier" : "0C7B444D2E744EB900D61A32",
+      "name" : "APOD"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:APOD.xcodeproj",
+        "identifier" : "0C7B44602E744EBB00D61A32",
+        "name" : "APODTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:APOD.xcodeproj",
+        "identifier" : "0C7B446A2E744EBB00D61A32",
+        "name" : "APODUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

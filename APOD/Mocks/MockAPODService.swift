@@ -1,7 +1,6 @@
 import Foundation
 
 final class MockAPODService: APODServiceProtocol {
-    
     private let mockData: [APOD] = [
         APOD(
             date: "2025-09-03",
@@ -95,15 +94,28 @@ final class MockAPODService: APODServiceProtocol {
         )
     ]
     
-    func fetchAPOD(for date: String?) async throws -> APOD {
-        return mockData.first { $0.date == date } ?? mockData.last!
-    }
-
-    func fetchRange(startDate: String, endDate: String) async throws -> [APOD] {
-        return mockData.filter { $0.date >= startDate && $0.date <= endDate }
-    }
-
-    func fetchRandom(count: Int) async throws -> [APOD] {
-        Array(mockData.shuffled().prefix(count))
-    }
+    func fetchAPOD(for date: String?) async -> Result<APOD, APIError> {
+           if let found = mockData.first(where: { $0.date == date }) {
+               return .success(found)
+           } else if let last = mockData.last {
+               return .success(last)
+           } else {
+               return .failure(.apiError(statusCode: 404))
+           }
+       }
+       
+       func fetchRange(startDate: String, endDate: String) async -> Result<[APOD], APIError> {
+           let filtered = mockData.filter { $0.date >= startDate && $0.date <= endDate }
+           if filtered.isEmpty {
+               return .failure(.apiError(statusCode: 404))
+           }
+           return .success(filtered)
+       }
+       
+       func fetchRandom(count: Int) async -> Result<[APOD], APIError> {
+           guard !mockData.isEmpty else {
+               return .failure(.apiError(statusCode: 404))
+           }
+           return .success(Array(mockData.shuffled().prefix(count)))
+       }
 }

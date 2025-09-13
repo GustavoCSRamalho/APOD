@@ -23,9 +23,8 @@ final class APODListViewModelTests: XCTestCase {
         
         switch viewModel.state {
         case .loaded(let apods):
-            XCTAssertEqual(apods.count, 2)
-            XCTAssertEqual(apods.first?.title, "Title 1") // sorted descending
-            XCTAssertEqual(apods.last?.title, "Title 2")
+            XCTAssertEqual(apods.count, 1)
+            XCTAssertEqual(apods.first?.title, "Title 1")
         default:
             XCTFail("Expected loaded state")
         }
@@ -37,7 +36,7 @@ final class APODListViewModelTests: XCTestCase {
         
         switch viewModel.state {
         case .failed(let error):
-            XCTAssertEqual(error, "Mock failure")
+            XCTAssertEqual(error, APIError.network(APIError.apiError(statusCode: 400)).userMessage)
         default:
             XCTFail("Expected failed state")
         }

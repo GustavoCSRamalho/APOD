@@ -1,29 +1,28 @@
 import CoreData
-import os.log
 
 final class CoreDataStack {
     static let shared = CoreDataStack()
-    private let logger = Logger(subsystem: "com.gustavoramalho.APOD", category: "CoreData")
-    let container: NSPersistentContainer
-    
+
+    let persistentContainer: NSPersistentContainer
+    var context: NSManagedObjectContext { persistentContainer.viewContext }
+
     private init() {
-        container = NSPersistentContainer(name: "NasaAPODModel")
-        container.loadPersistentStores { description, error in
+        persistentContainer = NSPersistentContainer(name: "NasaAPODModel")
+        persistentContainer.loadPersistentStores { storeDescription, error in
             if let error = error {
-                fatalError("Core Data store failed \(error)")
+                fatalError("Unresolved error \(error)")
             }
         }
     }
-    
-    var context: NSManagedObjectContext { container.viewContext }
-    
+
     func saveContext(context: NSManagedObjectContext? = nil) {
-        let ctx = context ?? self.context
+        let ctx = context ?? persistentContainer.viewContext
         if ctx.hasChanges {
             do {
                 try ctx.save()
             } catch {
-                logger.error("Error saving context: \(error)")
+                let nserror = error as NSError
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
             }
         }
     }

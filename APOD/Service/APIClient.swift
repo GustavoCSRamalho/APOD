@@ -5,6 +5,17 @@ enum APIError: Error {
     case network(Error)
     case apiError(statusCode: Int)
     case decoding(Error)
+    
+    var userMessage: String {
+           switch self {
+           case .network(_):
+               return "Não foi possível conectar. Verifique sua internet e tente novamente."
+           case .apiError(_):
+               return "Ocorreu um erro ao carregar os dados. Tente novamente mais tarde."
+           case .decoding(_):
+               return "Ocorreu um problema ao processar os dados recebidos."
+           }
+       }
 }
 
 final class APIClient {
