@@ -98,6 +98,7 @@ graph TD
   * Endpoint: `https://api.nasa.gov/planetary/apod`
   * Autenticação: API Key (Config.xcconfig)
   * Retorna imagens, vídeos e descrições diárias sobre astronomia.
+  * Usando Alamofire para requisições de rede, tratamento de erros e parsing JSON.
 
 ---
 
@@ -115,6 +116,7 @@ graph TD
 
 * Swift 5+ / SwiftUI
 * Combine / Async-Await
+* Alamofire para requisições HTTP
 * Core Data para persistência local
 * Dependency Injection com `AppDIContainer`
 * Unit & UI Tests com XCTest
@@ -148,6 +150,8 @@ graph TD
 * Xcode 15+
 * Swift 5.8+
 * iOS 16+
+* Alamofire (via Swift Package Manager)
+* SwiftLint (via Swift Package Manager)
 
 **Configurar API Key**
 Adicionar chave no `Config.xcconfig`:
