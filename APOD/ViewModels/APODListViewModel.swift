@@ -38,7 +38,7 @@ final class APODListViewModel: ObservableObject {
             let sorted = apods.sorted { $0.date > $1.date }
             state = .loaded(sorted)
         case .failure(let error):
-            state = .failed(error.userMessage) // ou use sua mensagem amigável
+            state = .failed(error.userMessage)
         }
     }
 }

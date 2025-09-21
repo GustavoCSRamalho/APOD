@@ -15,7 +15,6 @@ struct APODDetailView: View {
                 
                 if let urlString = apod.url, let url = URL(string: urlString) {
                     if apod.media_type == "image" {
-                        // Substituindo AsyncImage por KFImage
                         KFImage(url)
                             .placeholder {
                                 ProgressView()
